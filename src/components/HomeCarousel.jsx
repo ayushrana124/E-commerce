@@ -6,9 +6,9 @@ const HomeCarousel = () => {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/api/uploads/get`)
+      .get(`http://localhost:8000/api/uploads/get`)
       .then((res) => {
-        setimages(res.data.images);
+       setimages(res.data.images);
       })
       .catch((err) => console.error("Error fetching carousel images", err));
   }, []);

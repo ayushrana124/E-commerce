@@ -1,17 +1,31 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../context/AuthProvider.jsx";
+import axios from "axios";
 
 const ProtectedUser = ({ children }) => {
-  const { user, loading } = useAuth();
+  const [isAuth, setIsAuth] = useState(null); 
 
-  if (loading) {
-    return <div className="text-center mt-5">Loading...</div>;
-  }
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await axios.get("http://localhost:4000/api/auth/verify", {
+          withCredentials: true, 
+        });
+        if (res.status === 200) {
+          setIsAuth(true);
+        } else {
+          setIsAuth(false);
+        }
+      } catch (err) {
+        setIsAuth(false);
+      }
+    };
 
-  if (!user) {
-    return <Navigate to="/" replace />;
-  }
+    checkAuth();
+  }, []);
+
+  if (isAuth === null) return <div>Loading...</div>;
+  if (isAuth === false) return <Navigate to="/login" replace />;
   return children;
 };
 

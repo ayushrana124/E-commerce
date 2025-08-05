@@ -11,7 +11,6 @@ const FeatureProducts = ({ category, searchText }) => {
   const [totalPages, setTotalPages] = useState(1);
   const { cart } = useAuth();
   const { handleAddToCart } = useCart();
- 
 
   useEffect(() => {
     const delay = setTimeout(() => {
@@ -21,27 +20,25 @@ const FeatureProducts = ({ category, searchText }) => {
 
       if (isSearching) {
         const queryObj = {};
-        if (trimmedSearch) queryObj.name = trimmedSearch;
-        if (category !== "all") queryObj.category = category;
+        if (trimmedSearch) queryObj.search = trimmedSearch;
+        if (category !== "all") queryObj.categoryName = category;
 
         axios
           .get(
-            `${
-              import.meta.env.VITE_API_URL
-            }/api/product/get?search=${JSON.stringify(queryObj)}`
+            `http://localhost:4000/api/products/getallproducts`, {params : queryObj }
           )
           .then((res) => {
-            setProducts(res.data.products);
+            setProducts(res.data.data);
             setTotalPages(1);
             setPage(1);
           })
           .catch((err) => console.error("Search error", err));
       } else {
         axios
-          .get(`${import.meta.env.VITE_API_URL}/api/product/get?page=${page}`)
+          .get(`http://localhost:4000/api/products/getallproducts?page=${page}`)
           .then((res) => {
-            setProducts(res.data.products);
-            setTotalPages(res.data.pages);
+            setProducts(res.data.data);
+            setTotalPages(res.data.totalPages);
           })
           .catch((err) => console.error("Pagination error", err));
       }
@@ -75,8 +72,9 @@ const FeatureProducts = ({ category, searchText }) => {
             <p className="text-center">Loading...</p>
           ) : (
             products.map((product) => {
-              const isInCart = cart?.products?.find(
-                (item) => item.productId._id === product._id
+              
+              const isInCart = cart.items.find(
+                (item) => item.product._id === product._id
               );
 
               return (

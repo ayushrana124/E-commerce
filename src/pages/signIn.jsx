@@ -5,7 +5,6 @@ import { useAuth } from "../context/AuthProvider";
 
 const SignIn = () => {
 
-  const navigate = useNavigate();
   const { login } = useAuth();
 
   const [form, setForm] = useState({
@@ -22,7 +21,7 @@ const SignIn = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!form.email || !form.password) {
@@ -31,19 +30,20 @@ const SignIn = () => {
     }
 
     setError("");
-
-    axios
-    .post(`${import.meta.env.VITE_API_URL}/api/user/login`, form)
-      .then((res) => {
-        console.log("Login successful:", res.data);
-        login(res.data.token);
-        navigate("/");
+    try {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/signin`,  form , {
+        withCredentials: true,
       })
-      .catch((err) => {
-        console.error("Login failed:", err);
-        setError("Invalid email or password");
-      });
-    
+
+      if (res.status == 200) {
+        login();
+      }else{
+        console.error("SigIn error")
+      }
+    } catch (error) {
+      console.error("SignIn error", error.response?.data || error.message);
+    }
+
   };
 
   return (

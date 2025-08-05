@@ -17,7 +17,7 @@ const Navbar = ({ setcategory, setSearchText }) => {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/api/category/get`)
+      .get(`http://localhost:4000/api/category/get-categories`)
       .then((res) => {
         setCategories(res.data.data);
       })
@@ -67,14 +67,8 @@ const Navbar = ({ setcategory, setSearchText }) => {
                 to="/profile"
                 className="text-decoration-none text-white d-flex gap-1 align-items-center justify-content-end"
               >
-                <img
-                  src={user.profileImage}
-                  alt=""
-                  width={40}
-                  height={40}
-                  className="rounded-circle object-fit-cover "
-                />
-                <p className="fw-semibold fs-6 m-0">{user.name}</p>
+                Hello
+                <p className="fw-semibold fs-6 m-0 fst-italic">{user.name}</p>
               </Link>
             ) : (
               <Link

@@ -16,15 +16,12 @@ const {token, cart, setCart } = useAuth();
     try {
       const quantity = 1;
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/user/cart/add`,
+        `${import.meta.env.VITE_API_URL}/api/cart/add`,
         { productId, quantity },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+         withCredentials : true,
         }
       );
-      console.log("Cart after add : ", res.data.cart);
       setCart(res.data.cart);
     } catch (error) {
       console.error("Error adding to cart:", error);
@@ -54,20 +51,18 @@ const handleReduceProduct = async (productId) => {
   }
 };
 
-// DELETE PRODUCT
+// Remove PRODUCT
 const handleRemoveFromCart = async (productId) => {
   try {
+
     const res = await axios.delete(
-      `${import.meta.env.VITE_API_URL}/api/user/cart/product/${productId}`,
+      `${import.meta.env.VITE_API_URL}/api/cart/remove/${productId}`,
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        withCredentials : true,
       }
     );
  
     setCart(res.data.cart);
-    console.log("Cart after Delete Product :", res.data);
    
   } catch (error) {
     console.error("Error removing product from cart:", error);
