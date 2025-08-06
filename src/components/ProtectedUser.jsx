@@ -8,7 +8,7 @@ const ProtectedUser = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await axios.get("http://localhost:4000/api/auth/verify", {
+        const res = await axios.get("http://localhost:4000/api/user/auth/verify", {
           withCredentials: true, 
         });
         if (res.status === 200) {
@@ -25,7 +25,7 @@ const ProtectedUser = ({ children }) => {
   }, []);
 
   if (isAuth === null) return <div>Loading...</div>;
-  if (isAuth === false) return <Navigate to="/login" replace />;
+  if (isAuth === false) return <Navigate to="/" replace />;
   return children;
 };
 

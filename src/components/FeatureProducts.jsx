@@ -25,7 +25,7 @@ const FeatureProducts = ({ category, searchText }) => {
 
         axios
           .get(
-            `http://localhost:4000/api/products/getallproducts`, {params : queryObj }
+            `http://localhost:4000/api/user/products/getallproducts`, {params : queryObj }
           )
           .then((res) => {
             setProducts(res.data.data);
@@ -35,7 +35,7 @@ const FeatureProducts = ({ category, searchText }) => {
           .catch((err) => console.error("Search error", err));
       } else {
         axios
-          .get(`http://localhost:4000/api/products/getallproducts?page=${page}`)
+          .get(`http://localhost:4000/api/user/products/getallproducts?page=${page}`)
           .then((res) => {
             setProducts(res.data.data);
             setTotalPages(res.data.totalPages);
@@ -73,7 +73,7 @@ const FeatureProducts = ({ category, searchText }) => {
           ) : (
             products.map((product) => {
               
-              const isInCart = cart.items.find(
+              const isInCart = cart?.items?.find(
                 (item) => item.product._id === product._id
               );
 

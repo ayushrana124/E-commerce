@@ -11,12 +11,12 @@ export const CartContext = ({children}) => {
 const {token, cart, setCart } = useAuth();
 
     //ADD PRODUCT
- const handleAddToCart = async (productId) => {
+ const handleAddToCart = async (productId, productQuantity) => {
 
     try {
-      const quantity = 1;
+      const quantity = productQuantity || 1;
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/cart/add`,
+        `${import.meta.env.VITE_API_URL}/cart/add`,
         { productId, quantity },
         {
          withCredentials : true,
@@ -35,7 +35,7 @@ const handleReduceProduct = async (productId) => {
     const quantity =  -1;
 
     const res = await axios.post(
-      `${import.meta.env.VITE_API_URL}/api/user/cart/add`,
+      `${import.meta.env.VITE_API_URL}/user/cart/add`,
       { productId, quantity },
       {
         headers: {
@@ -56,7 +56,7 @@ const handleRemoveFromCart = async (productId) => {
   try {
 
     const res = await axios.delete(
-      `${import.meta.env.VITE_API_URL}/api/cart/remove/${productId}`,
+      `${import.meta.env.VITE_API_URL}/cart/remove/${productId}`,
       {
         withCredentials : true,
       }

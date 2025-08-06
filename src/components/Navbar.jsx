@@ -17,7 +17,7 @@ const Navbar = ({ setcategory, setSearchText }) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/api/category/get-categories`)
+      .get(`http://localhost:4000/api/user/category/get-categories`)
       .then((res) => {
         setCategories(res.data.data);
       })

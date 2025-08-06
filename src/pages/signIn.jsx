@@ -31,7 +31,7 @@ const SignIn = () => {
 
     setError("");
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/signin`,  form , {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/signin`,  form , {
         withCredentials: true,
       })
 

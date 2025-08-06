@@ -33,7 +33,7 @@ const [form, setForm] = useState({
 
     console.log(form);
 
-   axios.post(`${import.meta.env.VITE_API_URL}/api/user/signup`, form)
+   axios.post(`${import.meta.env.VITE_API_URL}/user/signup`, form)
    .then((res) => {
     console.log("User Registered", res.data)
     navigate('/signin')

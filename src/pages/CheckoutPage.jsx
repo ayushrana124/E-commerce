@@ -5,11 +5,11 @@ import axios from "axios";
 import { useAuth } from "../context/AuthProvider";
 
 const CheckoutPage = () => {
-  const { cart, addresses, setAddresses, token } = useAuth();
+  const { cart, addresses, setAddresses } = useAuth();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    addressId: "",
+    address: "",
     paymentMethod: "",
   });
 
@@ -30,13 +30,11 @@ const CheckoutPage = () => {
   e.preventDefault();
   try {
     const payload = {
-      addressId: Number(form.addressId),
+      address: form.address,
       paymentMethod: form.paymentMethod,
     };
-    await axios.post(`${import.meta.env.VITE_API_URL}/api/order/create`, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    await axios.post(`${import.meta.env.VITE_API_URL}/order/create`, payload, {
+      withCredentials : true
     });
     alert("Checkout successful!");
     navigate("/thankyou");
@@ -49,16 +47,17 @@ const CheckoutPage = () => {
 const handleAddressSubmit = async () => {
   try {
     const response = await axios.post(
-      `${import.meta.env.VITE_API_URL}/api/user/createAddress`,
-      { addresses: [newAddress] },
+      `${import.meta.env.VITE_API_URL}/address/add`,
+       newAddress,
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        withCredentials : true
       }
     );
-   setAddresses(response.data.data.addresses)
-    setShowModal(false);
+    console.log("Adding address", response.data);
+    
+setAddresses((prev) => [...prev, response.data.address]);
+
+   setShowModal(false);
     setNewAddress({
       street: "",
       city: "",
@@ -94,14 +93,14 @@ const handleAddressSubmit = async () => {
                   <Form.Label className="fw-semibold">Select Address</Form.Label>
                   <div className="d-flex align-items-center gap-2">
                     <Form.Select
-                      name="addressId"
-                      value={form.addressId}
+                      name="address"
+                      value={form.address}
                       onChange={handleChange}
                       required
                     >
                       <option value="">-- Choose an address --</option>
                       {addresses.map((addr) => (
-                        <option key={addr.addressId} value={addr.addressId}>
+                        <option key={addr._id} value={addr._id}>
                           {addr.fullAddress || `${addr.street}, ${addr.city}`}
                         </option>
                       ))}
@@ -136,20 +135,20 @@ const handleAddressSubmit = async () => {
                 <div className="border-top pt-3 mt-4">
                   <h5 className="fw-bold mb-3">Order Summary</h5>
                   <ListGroup variant="flush" className="mb-3">
-                    {cart?.products?.map((item, idx) => (
+                    {cart?.items?.map((item, idx) => (
                       <ListGroup.Item
-                        key={idx}
+                        key={item._id}
                         className="d-flex justify-content-between"
                       >
                         <div>
-                          {item.productId.name} <small className="text-muted">x{item.quantity}</small>
+                          {item.product.name} <small className="text-muted">x{item.quantity}</small>
                         </div>
-                        <div>₹{item.totalPrice}</div>
+                        <div>₹{item.product.price * item.quantity}</div>
                       </ListGroup.Item>
                     ))}
                     <ListGroup.Item className="d-flex justify-content-between fw-bold fs-5">
                       <div>Total</div>
-                      <div>₹{cart?.grandTotalPrice}</div>
+                      <div>₹{cart?.totalPrice}</div>
                     </ListGroup.Item>
                   </ListGroup>
                 </div>

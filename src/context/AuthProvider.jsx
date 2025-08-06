@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [cart, setCart] = useState({});
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(true);
-    const [cartLoading, setCartLoading] = useState(true);
+  const [cartLoading, setCartLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
     const init = async () => {
       try {
         // Verify user session from cookie
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/auth/verify`, {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/auth/verify`, {
           withCredentials: true,
         });
 
@@ -25,13 +25,18 @@ export const AuthProvider = ({ children }) => {
           setUser(res.data.user);
 
           // Fetch cart
-          const cartRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/cart`, {
+          const cartRes = await axios.get(`${import.meta.env.VITE_API_URL}/cart`, {
             withCredentials: true,
           });
           setCart(cartRes.data.cart);
-         
+ 
+          // fetch adddress
+          const address = await axios.get(`${import.meta.env.VITE_API_URL}/address`, {
+            withCredentials: true
+          });
+          setAddresses(address.data.address)
+
         } else {
-          // No user found, reset everything
           setUser(null);
           setCart({});
           setAddresses([]);
@@ -54,17 +59,20 @@ export const AuthProvider = ({ children }) => {
 
   const login = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/auth/verify`, {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/auth/verify`, {
         withCredentials: true,
       });
-      console.log("user", res.data.user);
       setUser(res.data.user);
 
-      const cartRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/cart`, {
+      const cartRes = await axios.get(`${import.meta.env.VITE_API_URL}/cart`, {
         withCredentials: true,
       });
-      console.log("cart data : ", cartRes.data.cart)
       setCart(cartRes.data.cart);
+
+      const address = await axios.get(`${import.meta.env.VITE_API_URL}/address`, {
+        withCredentials: true
+      });
+      setAddresses(address.data.address)
 
       navigate("/");
     } catch (err) {
@@ -74,7 +82,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/signup`, {}, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/auth/signout`, {}, {
         withCredentials: true,
       });
     } catch (err) {

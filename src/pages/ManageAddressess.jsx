@@ -13,21 +13,16 @@ const ManageAddressPage = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  console.log("Address managing : ", addresses);
-
     const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleDelete = async (id) => {
     try {
-        const addr = Number(id);
-      await axios.delete(`${import.meta.env.VITE_API_URL}/api/user/deleteAddress/${addr}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      await axios.delete(`${import.meta.env.VITE_API_URL}/address/delete/${id}`, {
+      withCredentials : true
       });
-      setAddresses((prev) => prev.filter((addr) => addr.addressId !== id));
+      setAddresses((prev) => prev.filter((addr) => addr._id !== id));
     } catch (err) {
       console.error("Delete error:", err.response?.data || err.message);
     }
@@ -35,20 +30,15 @@ const ManageAddressPage = () => {
 
    const handleAddAddress = async () => {
     try {
-      const payload = {
-        addresses: [form],
-      };
 
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/user/createAddress`,
-        payload,
+        `${import.meta.env.VITE_API_URL}/address/add`,
+        form,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+         withCredentials : true
         }
       );
-      setAddresses(res.data.data.addresses);
+      setAddresses((prev) => [...prev, res.data.address]);
       setForm({
         street: "",
         city: "",
@@ -71,13 +61,13 @@ const ManageAddressPage = () => {
       <ul className="list-group mb-4">
         {addresses.map((addr) => (
           <li
-            key={addr.addressId}
+            key={addr._id}
             className="list-group-item d-flex justify-content-between align-items-center"
           >
             {`${addr.street}, ${addr.city}, ${addr.state}, ${addr.postalCode}, ${addr.country}`}
             <button
               className="btn btn-sm btn-danger"
-              onClick={() => handleDelete(addr.addressId)}
+              onClick={() => handleDelete(addr._id)}
             >
               Delete
             </button>

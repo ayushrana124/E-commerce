@@ -46,11 +46,11 @@ if (cartLoading) {
                   </div>
                   <div className="col-md-3 d-flex flex-column align-items-end px-3">
                     <div className="btn-group mb-2" role="group">
-                      <button onClick={()=> handleReduceProduct(item.product._id)} className="btn btn-outline-secondary btn-sm">-</button>
+                      <button onClick={()=> handleAddToCart(item.product._id, -1)} className="btn btn-outline-secondary btn-sm">-</button>
                       <button className="btn btn-outline-secondary btn-sm" disabled>
                         {item.quantity}
                       </button>
-                      <button onClick={() => handleAddToCart(item.product._id)} className="btn btn-outline-secondary btn-sm">+</button>
+                      <button onClick={() => handleAddToCart(item.product._id, 1)} className="btn btn-outline-secondary btn-sm">+</button>
                     </div>
                     <button onClick={() => handleRemoveFromCart(item.product._id)} className="btn btn-sm btn-outline-danger">Remove</button>
                   </div>
